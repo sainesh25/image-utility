@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["...", "tomcat9"]
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests"]
+
+[start]
+cmd = "cp target/*.war /opt/tomcat/webapps/ROOT.war && catalina.sh run"
