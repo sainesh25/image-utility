@@ -74,7 +74,7 @@ image-utility/
 
 ## Build Process
 
-### Automated Build (Recommended)
+### Option 1: Automated Build with Batch Script (Local)
 
 **Run:** `deploy_and_run.bat`
 
@@ -84,7 +84,55 @@ This script performs all build steps automatically:
 .\deploy_and_run.bat
 ```
 
-### Manual Build Steps
+### Option 2: Build with Maven (Recommended for Production)
+
+**Prerequisites:**
+- Java JDK 11+
+- Maven 3.6+ ([Download](https://maven.apache.org/download.cgi))
+
+**Install Maven:**
+
+1. Download Maven from https://maven.apache.org/download.cgi
+2. Extract to `C:\Program Files\Apache\maven`
+3. Add to PATH:
+   ```powershell
+   $env:PATH += ";C:\Program Files\Apache\maven\bin"
+   ```
+4. Verify:
+   ```bash
+   mvn --version
+   ```
+
+**Build Commands:**
+
+```bash
+# Clean previous builds
+mvn clean
+
+# Compile and package WAR
+mvn package
+
+# Full build (clean + compile + package)
+mvn clean package
+```
+
+**Output:**
+- WAR file created at: `target/image-utility.war`
+- Size: ~3-5 MB
+- Ready for deployment to any Tomcat server or Railway
+
+**Deploy Maven-built WAR:**
+
+```bash
+# Copy to Tomcat
+copy target\image-utility.war "C:\apache-tomcat-9.0.113\apache-tomcat-9.0.113\webapps\"
+
+# Start Tomcat
+cd C:\apache-tomcat-9.0.113\apache-tomcat-9.0.113\bin
+catalina.bat run
+```
+
+### Option 3: Manual Build Steps (Without Maven)
 
 **If you need to build manually:**
 
@@ -155,7 +203,7 @@ xcopy /E /Y /Q "build\classes\*" "%APP_DIR%\WEB-INF\classes\"
 
 ## Deployment
 
-### Deploy to Tomcat
+### Deploy to Tomcat (Local)
 
 **Automated (via script):**
 
@@ -163,7 +211,21 @@ xcopy /E /Y /Q "build\classes\*" "%APP_DIR%\WEB-INF\classes\"
 .\deploy_and_run.bat
 ```
 
-**Manual Steps:**
+**With Maven:**
+
+```bash
+# Build WAR
+mvn clean package
+
+# Copy to Tomcat webapps
+copy target\image-utility.war "C:\apache-tomcat-9.0.113\apache-tomcat-9.0.113\webapps\"
+
+# Start Tomcat
+cd C:\apache-tomcat-9.0.113\apache-tomcat-9.0.113\bin
+catalina.bat run
+```
+
+**Manual Steps (Without Maven):**
 
 1. **Stop Tomcat** (if running)
    ```bash
@@ -438,6 +500,45 @@ set JAVA_OPTS=-Xms512m -Xmx2048m
    ```
 
 See `WEBP_LIBRARY_SETUP.md` for details.
+
+---
+
+## Cloud Deployment (Railway)
+
+### Deploy to Railway Platform
+
+**Prerequisites:**
+- GitHub account
+- Railway account (sign up at https://railway.app)
+- Code pushed to GitHub repository
+
+**Quick Deployment:**
+
+1. **Push to GitHub:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit with Maven support"
+   git remote add origin https://github.com/YOUR_USERNAME/image-utility.git
+   git push -u origin main
+   ```
+
+2. **Connect to Railway:**
+   - Visit https://railway.app
+   - Click "New Project"
+   - Select "Deploy from GitHub repo"
+   - Choose your repository
+
+3. **Automatic Build:**
+   - Railway detects `pom.xml`
+   - Runs `mvn clean install`
+   - Deploys WAR to Tomcat
+   - Provides public URL
+
+4. **Access Your App:**
+   - Railway provides URL: `https://your-app.up.railway.app`
+
+**See:** [Railway Deployment Guide](./brain/railway-deployment.md) for detailed instructions.
 
 ---
 

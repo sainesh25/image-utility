@@ -1,0 +1,32 @@
+# Build outputs
+target/
+build/
+*.war
+*.jar
+
+# IDE files
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local Tomcat
+TOMCAT_HOME/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local environment
+.env.local
+*.local
